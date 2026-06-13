@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Special Moments ✨</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Pacifico|Playfair+Display:700|Quicksand:400,700&display=swap' rel='stylesheet' type='text/css'>
+    
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        background: #1a1a1a;
+        font-family: 'Quicksand', sans-serif;
+        position: relative;
+    }
+
+    /* Floating Elements Background */
+    @keyframes float-gentle {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 0.3;
+        }
+        50% {
+            transform: translateY(-20px) rotate(5deg);
+            opacity: 0.8;
+        }
+    }
+
+    .floating-elements {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .float-item {
+        position: absolute;
+        font-size: 30px;
+        animation: float-gentle 6s infinite ease-in-out;
+        filter: drop-shadow(0 0 15px rgba(255,255,255,0.5));
+    }
+
+    .float-item:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+    .float-item:nth-child(2) { top: 15%; right: 15%; animation-delay: 1s; }
+    .float-item:nth-child(3) { top: 60%; left: 5%; animation-delay: 2s; }
+    .float-item:nth-child(4) { top: 70%; right: 10%; animation-delay: 3s; }
+    .float-item:nth-child(5) { top: 30%; left: 50%; animation-delay: 1.5s; }
+    .float-item:nth-child(6) { top: 80%; left: 40%; animation-delay: 2.5s; }
+
+    /* Sparkles */
+    @keyframes sparkle {
+        0%, 100% { 
+            opacity: 0; 
+            transform: scale(0) rotate(0deg);
+        }
+        50% { 
+            opacity: 1; 
+            transform: scale(1.5) rotate(180deg);
+        }
+    }
+
+    .sparkles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .sparkle {
+        position: absolute;
+        color: #fff;
+        font-size: 16px;
+        animation: sparkle 3s infinite;
+    }
+
+    /* Card Container */
+    .card-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 1000px;
+        height: 85vh;
+        max-height: 600px;
+        z-index: 10;
+    }
+
+    /* Wish Card Styling */
+    .wish-card {
+        display: none;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 
+            0 30px 60px rgba(0,0,0,0.8),
+            0 0 0 15px #fff,
+            0 0 60px rgba(255,255,255,0.3);
+        overflow: hidden;
+        position: relative;
+        animation: cardPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        max-height: 90vh;
+    }
+
+    @keyframes cardPop {
+        0% {
+            transform: scale(0) rotate(-10deg);
+            opacity: 0;
+        }
+        60% {
+            transform: scale(1.05) rotate(2deg);
+        }
+        100% {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+    }
+
+    .wish-card.active {
+        display: block;
+    }
+
+    /* Tape Effect */
+    .tape {
+        position: absolute;
+        width: 70px;
+        height: 25px;
+        background: rgba(255,255,255,0.3);
+        border: 2px solid rgba(0,0,0,0.1);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        z-index: 100;
+    }
+
+    .tape-top-left {
+        top: -12px;
+        left: 35px;
+        transform: rotate(-45deg);
+    }
+
+    .tape-top-right {
+        top: -12px;
+        right: 35px;
+        transform: rotate(45deg);
+    }
+
+    /* Card Content Layout */
+    .card-content {
+        display: flex;
+        height: 100%;
+        position: relative;
+        background: #fff;
+        max-height: 100%;
+        overflow: visible;
+    }
+
+    /* Image Side */
+    .card-image-wrapper {
+        flex: 1;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+        border-right: 2px dashed #e0e0e0;
+    }
+
+    .card-image {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        border: 8px solid #fff;
+        box-shadow: 
+            0 15px 30px rgba(0,0,0,0.3),
+            inset 0 0 15px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        transform: rotate(-2deg);
+        transition: transform 0.3s ease;
+    }
+
+    .card-image:hover {
+        transform: rotate(0deg) scale(1.02);
+    }
+
+    /* Text Side - FIXED FOR LONG CONTENT */
+    .card-text {
+        flex: 1;
+        padding: 35px 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        background: #fff;
+        overflow-y: auto;
+        padding-top: 60px;
+    }
+
+    /* Corner Decorations */
+    .corner-deco {
+        position: absolute;
+        font-size: 25px;
+        opacity: 0.3;
+        animation: wiggle 2s ease-in-out infinite;
+    }
+
+    @keyframes wiggle {
+        0%, 100% { transform: rotate(-5deg); }
+        50% { transform: rotate(5deg); }
+    }
+
+    .corner-top-left { top: 10px; left: 10px; }
+    .corner-top-right { top: 10px; right: 10px; }
+    .corner-bottom-left { bottom: 10px; left: 10px; }
+    .corner-bottom-right { bottom: 10px; right: 10px; }
+
+    /* Multi-Image Grid for Card 5 */
+    .multi-image-grid {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .grid-image {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        border: 4px solid #fff;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        transition: transform 0.3s ease;
+    }
+
+    .grid-image:hover {
+        transform: scale(1.05);
+        z-index: 10;
+    }
+
+    .grid-image:nth-child(5) {
+        grid-column: 1 / 3;
+    }
+
+    /* Card Number Badge */
+    .card-number {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        width: 45px;
+        height: 45px;
+        background: #000;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: bold;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        border: 3px solid #fff;
+        animation: pulse-badge 2s ease-in-out infinite;
+        z-index: 10;
+    }
+
+    @keyframes pulse-badge {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    /* Heart Divider */
+    .heart-divider {
+        margin: 8px 0;
+        font-size: 22px;
+        animation: heart-beat 1.5s ease-in-out infinite;
+    }
+
+    @keyframes heart-beat {
+        0%, 100% { transform: scale(1); }
+        25% { transform: scale(1.2); }
+        50% { transform: scale(1); }
+    }
+
+    .card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 28px;
+        color: #000;
+        margin-bottom: 8px;
+        font-weight: 700;
+        position: relative;
+        display: inline-block;
+        text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+    }
+
+    .card-title::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 2px;
+        background: #000;
+        border-radius: 2px;
+    }
+
+    .card-subtitle {
+        font-family: 'Pacifico', cursive;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 12px;
+        font-style: italic;
+    }
+
+    .card-message {
+        font-size: 14px;
+        line-height: 1.7;
+        color: #333;
+        font-weight: 500;
+        max-width: 90%;
+        margin: 0 auto;
+        position: relative;
+        padding: 12px 8px;
+        overflow-y: auto;
+        max-height: none;
+        width: 100%;
+    }
+
+    .card-message::before {
+        content: '"';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        font-size: 45px;
+        color: #e0e0e0;
+        font-family: Georgia, serif;
+    }
+
+    .card-emoji {
+        font-size: 45px;
+        margin: 8px 0;
+        animation: emoji-bounce 2s ease-in-out infinite;
+        filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+    }
+
+    @keyframes emoji-bounce {
+        0%, 100% { transform: translateY(0) rotate(-5deg); }
+        50% { transform: translateY(-8px) rotate(5deg); }
+    }
+
+    /* Note Line */
+    .note-line {
+        width: 100%;
+        height: 1px;
+        background: repeating-linear-gradient(
+            to right,
+            #e0e0e0 0px,
+            #e0e0e0 8px,
+            transparent 8px,
+            transparent 12px
+        );
+        margin: 6px 0;
+    }
+
+    /* Navigation Buttons */
+    .nav-btn {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 100;
+        background: #000;
+        border: 3px solid #fff;
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 40px;
+        cursor: pointer;
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        transition: all 0.3s ease;
+        font-family: 'Quicksand', sans-serif;
+    }
+
+    .nav-btn:hover {
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+        background: #fff;
+        color: #000;
+    }
+
+    #prevBtn { left: 12px; }
+    #nextBtn { right: 12px; }
+
+    /* Polaroid Caption */
+    .polaroid-caption {
+        font-family: 'Pacifico', cursive;
+        font-size: 13px;
+        color: #666;
+        background: #fff;
+        padding: 6px 16px;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        margin-top: 8px;
+    }
+
+    /* Stickers */
+    .sticker {
+        position: absolute;
+        font-size: 30px;
+        animation: sticker-peel 3s ease-in-out infinite;
+        filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.3));
+    }
+
+    @keyframes sticker-peel {
+        0%, 100% { transform: rotate(-5deg); }
+        50% { transform: rotate(5deg) scale(1.1); }
+    }
+
+    .sticker-1 { top: 35px; right: 45px; }
+    .sticker-2 { bottom: 45px; left: 35px; }
+
+    /* MOBILE RESPONSIVENESS - iPhone XS Max (414x896) */
+    @media only screen and (max-width: 480px) {
+        .float-item {
+            font-size: 24px;
+        }
+
+        .card-container {
+            width: 95%;
+            height: 90vh;
+            max-height: none;
+        }
+
+        .wish-card {
+            border-radius: 12px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.8),
+                0 0 0 10px #fff;
+        }
+
+        .card-content {
+            flex-direction: column;
+        }
+        
+        .card-image-wrapper {
+            flex: 0 0 35%;
+            padding: 15px;
+            border-right: none;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+
+        .card-image {
+            border: 6px solid #fff;
+        }
+        
+        .card-text {
+            flex: 1;
+            padding: 50px 15px 20px 15px;
+            overflow-y: auto;
+            justify-content: flex-start;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .card-subtitle {
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+        
+        .card-message {
+            font-size: 11px;
+            line-height: 1.5;
+            padding: 8px 5px;
+            text-align: left;
+        }
+
+        .card-message::before {
+            font-size: 30px;
+        }
+        
+        .nav-btn {
+            padding: 10px 16px;
+            font-size: 14px;
+            border-radius: 30px;
+        }
+
+        .card-emoji {
+            font-size: 30px;
+            margin: 5px 0;
+        }
+
+        .card-number {
+            width: 35px;
+            height: 35px;
+            font-size: 16px;
+            top: 8px;
+            left: 8px;
+            border: 2px solid #fff;
+        }
+
+        .heart-divider {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .polaroid-caption {
+            font-size: 10px;
+            padding: 5px 12px;
+            margin-top: 6px;
+        }
+
+        .corner-deco {
+            font-size: 18px;
+        }
+
+        .tape {
+            width: 55px;
+            height: 22px;
+        }
+
+        .tape-top-left {
+            top: -10px;
+            left: 25px;
+        }
+
+        .tape-top-right {
+            top: -10px;
+            right: 25px;
+        }
+
+        .sticker {
+            font-size: 22px;
+        }
+
+        .sticker-1 { top: 28px; right: 30px; }
+        .sticker-2 { bottom: 35px; left: 25px; }
+
+        #prevBtn { left: 8px; }
+        #nextBtn { right: 8px; }
+    }
+
+    /* Extra Small Mobile (iPhone SE, etc.) */
+    @media only screen and (max-width: 375px) {
+        .card-container {
+            width: 98%;
+        }
+
+        .card-image-wrapper {
+            flex: 0 0 30%;
+            padding: 12px;
+        }
+
+        .card-text {
+            padding: 45px 12px 18px 12px;
+        }
+
+        .card-title {
+            font-size: 18px;
+        }
+
+        .card-subtitle {
+            font-size: 10px;
+        }
+
+        .card-message {
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .card-emoji {
+            font-size: 28px;
+        }
+
+        .polaroid-caption {
+            font-size: 9px;
+            padding: 4px 10px;
+        }
+
+        .nav-btn {
+            padding: 8px 14px;
+            font-size: 13px;
+        }
+    }
+
+    /* Landscape Mode */
+    @media only screen and (max-height: 500px) and (orientation: landscape) {
+        .card-container {
+            height: 95vh;
+            width: 85%;
+        }
+
+        .card-content {
+            flex-direction: row;
+        }
+
+        .card-image-wrapper {
+            flex: 0 0 40%;
+            border-right: 2px dashed #e0e0e0;
+            border-bottom: none;
+            padding: 15px;
+        }
+
+        .card-text {
+            padding: 40px 12px 15px 12px;
+        }
+
+        .card-title {
+            font-size: 16px;
+        }
+
+        .card-message {
+            font-size: 9px;
+        }
+
+        .card-emoji {
+            font-size: 25px;
+        }
+
+        .nav-btn {
+            padding: 8px 14px;
+            font-size: 12px;
+        }
+    }
+
+    /* Page Turn Effect */
+    @keyframes page-turn {
+        0% {
+            transform: perspective(2000px) rotateY(-90deg);
+            opacity: 0;
+        }
+        100% {
+            transform: perspective(2000px) rotateY(0deg);
+            opacity: 1;
+        }
+    }
+
+    .wish-card.turning {
+        animation: page-turn 0.8s ease;
+    }
+
+    /* Image Lightbox/Modal */
+    .image-lightbox {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .image-lightbox.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .lightbox-content {
+        position: relative;
+        max-width: 95%;
+        max-height: 95%;
+        animation: zoomIn 0.3s ease;
+    }
+
+    @keyframes zoomIn {
+        from { 
+            transform: scale(0.5);
+            opacity: 0;
+        }
+        to { 
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .lightbox-image {
+        max-width: 100%;
+        max-height: 95vh;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: -45px;
+        right: 0;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        background: rgba(0, 0, 0, 0.5);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: 2px solid #fff;
+    }
+
+    .lightbox-close:hover {
+        background: #fff;
+        color: #000;
+        transform: rotate(90deg);
+    }
+
+    /* Make images clickable */
+    .card-image,
+    .grid-image {
+        cursor: pointer;
+        position: relative;
+    }
+
+    .card-image::after,
+    .grid-image::after {
+        content: '🔍';
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 16px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .card-image:hover::after,
+    .grid-image:hover::after {
+        opacity: 1;
+    }
+
+    /* Mobile adjustments for lightbox */
+    @media only screen and (max-width: 480px) {
+        .lightbox-close {
+            top: 10px;
+            right: 10px;
+            font-size: 30px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .lightbox-content {
+            max-width: 98%;
+            max-height: 98%;
+        }
+
+        .card-image::after,
+        .grid-image::after {
+            font-size: 14px;
+            padding: 6px 10px;
+        }
+    }
+</style>
+</head>
+<body>
+
+    <!-- Floating Elements -->
+    <div class="floating-elements">
+        <div class="float-item">🎈</div>
+        <div class="float-item">🎀</div>
+        <div class="float-item">🎁</div>
+        <div class="float-item">✨</div>
+        <div class="float-item">💝</div>
+        <div class="float-item">🌙</div>
+    </div>
+
+    <!-- Sparkles -->
+    <div class="sparkles">
+        <div class="sparkle" style="top: 15%; left: 25%;">✦</div>
+        <div class="sparkle" style="top: 25%; left: 75%; animation-delay: 0.5s;">✧</div>
+        <div class="sparkle" style="top: 60%; left: 15%; animation-delay: 1s;">✦</div>
+        <div class="sparkle" style="top: 70%; left: 85%; animation-delay: 1.5s;">✧</div>
+        <div class="sparkle" style="top: 40%; left: 50%; animation-delay: 2s;">✦</div>
+        <div class="sparkle" style="top: 85%; left: 40%; animation-delay: 2.5s;">✧</div>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="audioBackground" loop>
+        <source src="s.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Special Audio for Card 5 -->
+    <audio id="audioCard5">
+        <source src="1.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Navigation Sound Effects -->
+    <audio id="audioNext">
+        <source src="audio2.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audioPrev">
+        <source src="audio1.mp3" type="audio/mpeg">
+    </audio>
+
+    <button id="prevBtn" class="nav-btn">◄</button>
+    <button id="nextBtn" class="nav-btn">►</button>
+
+    <div class="card-container">
+        
+        <!-- Card 1 -->
+        <div class="wish-card active" id="card1">
+            <div class="tape tape-top-left"></div>
+            <div class="tape tape-top-right"></div>
+            <div class="sticker sticker-1">⭐</div>
+            
+            <div class="card-content">
+                <div class="card-image-wrapper">
+                    <div class="card-image" style="background-image: url('img1.png');"></div>
+                </div>
+                <div class="card-text">
+                    <div class="card-number">1</div>
+                    <div class="corner-deco corner-top-right">✿</div>
+                    <div class="corner-deco corner-bottom-left">♡</div>
+                    
+                    <div class="card-emoji">🎂</div>
+                    <h2 class="card-title">Dil ki bat Madam G k sat</h2>
+                    <div class="heart-divider">♥</div>
+                    <p class="card-subtitle">A BirthDay to Remember...</p>
+                    <div class="note-line"></div>
+                    <p class="card-message">
+                         😭😭😭😭 Kya Likhu ab ma. Phele to apni picture dekho😂😂😂😂. Muje to boht hasi ai dhk ke 😂😂. Kon ha tumhara cameraman. Khair jo b muje yaad ha hamri jab first time bat hui thi whatsapp pe ICT ki lab ka group bana tha.Mane kaha tha tumhe ke ma larkiyo sa bat nhi kerta. Tumna na kaha tha to mane b koi PhD nhi ki hui larko sa bat kerne ma. Shuru din sa nakhre wali ho tum😂😂😂😂.Mazak ker raha hu boht achi ho tum. Wawa hi nakhre uthae tumna mare😭😭😭😭😭😭.
+                    </p>
+                    <div class="polaroid-caption">Forever special for me 💖</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="wish-card" id="card2">
+            <div class="tape tape-top-left"></div>
+            <div class="tape tape-top-right"></div>
+            <div class="sticker sticker-2">🌟</div>
+            
+            <div class="card-content">
+                <div class="card-image-wrapper">
+                    <div class="card-image" style="background-image: url('img2.png');"></div>
+                </div>
+                <div class="card-text">
+                    <div class="card-number">2</div>
+                    <div class="corner-deco corner-top-right">✾</div>
+                    <div class="corner-deco corner-bottom-left">♥</div>
+                    
+                    <div class="card-emoji">🌈</div>
+                    <h2 class="card-title">Dil ki bat Madam G k sat</h2>
+                    <div class="heart-divider">♥</div>
+                    <p class="card-subtitle">Moment ha bhai Moment ha...</p>
+                    <div class="note-line"></div>
+                    <p class="card-message">
+                        Ye pic achi ha😂😂😂. Achi lag rahi ho🤌🤌. Dekho 3 saal guzar gae pata b nhi chala. Phir agae pata nhi kon kidr chala jae ga. Ase lagta ha abi kal hi ay the uni ma. Pata nhi tumhe yaad ha ke nhi shayad DM ka paper tha or mera zyada sa syllabus para huwa tha. Tumna Video bana ke bheji thi muje questions samjha rahi thi tum muje. Hae boht kush huwa tha ma ke tumna video bana ke bhji ha. Dusra jab ma trip p gya huwa tha tab tumna Database ki assignment b kerke di thi muje🌺🌺🌺🌺. Thank You so much Sana boht mushkil time ma kam ai ho tum mare. Jab mera masla bana tha Kaneez Fatima wala. Tab to mera larkiyo sa bharoosa hi uth gya tha but you are different. Means alot💖💖💖💖
+                    </p>
+                    <div class="polaroid-caption">Best times together 🌺</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="wish-card" id="card3">
+            <div class="tape tape-top-left"></div>
+            <div class="tape tape-top-right"></div>
+            <div class="sticker sticker-1">💫</div>
+            
+            <div class="card-content">
+                <div class="card-image-wrapper">
+                    <div class="card-image" style="background-image: url('img3.png');"></div>
+                </div>
+                <div class="card-text">
+                    <div class="card-number">3</div>
+                    <div class="corner-deco corner-top-right">✻</div>
+                    <div class="corner-deco corner-bottom-left">♥</div>
+                    
+                    <div class="card-emoji">🌟</div>
+                    <h2 class="card-title">Dil ki bat Madam G ke sat</h2>
+                    <div class="heart-divider">♥</div>
+                    <p class="card-subtitle">Masti Nhi Rukni Chahiye...</p>
+                    <div class="note-line"></div>
+                    <p class="card-message">
+                        Dekho zara kitni pics lati ho tum. Muje to zara shok nhi. Ab or kya kahu 😂😂😂😂. Chalo jab semester end ho ga tab khana khane chale ge sare kahi bahir agr mood bana sab ka to. Acha jase next card pe ja rahi ho wase previous p b jake dekho abi 😂😂😂😂😂😂. Har time mu hi bana ke rakha hota ha 😂😂. Chill raha kero. Ase lagta ha jase har time gussa ma hi ho✨✨. 
+                    </p>
+                    <div class="polaroid-caption">You shine so bright ✨</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="wish-card" id="card4">
+            <div class="tape tape-top-left"></div>
+            <div class="tape tape-top-right"></div>
+            <div class="sticker sticker-2">🎊</div>
+            
+            <div class="card-content">
+                <div class="card-image-wrapper">
+                    <div class="card-image" style="background-image: url('img4.png');"></div>
+                </div>
+                <div class="card-text">
+                    <div class="card-number">4</div>
+                    <div class="corner-deco corner-top-right">✽</div>
+                    <div class="corner-deco corner-bottom-left">♥</div>
+                    
+                    <div class="card-emoji">🎊</div>
+                    <h2 class="card-title">My Wish</h2>
+                    <div class="heart-divider">♥</div>
+                    <p class="card-subtitle">For You, Always...</p>
+                    <div class="note-line"></div>
+                    <p class="card-message">
+                        Rona to nhi agya tumhe abi tak 😂😂😂😂. Koi ni nhi b aya to khair ha. Hae sachi boht nakhre utha sana tumna mare. Jab b larai hui hamari hamesha tumna hi phele mesg kiya. Uske ilawa aftari b banai thi tumna mari😭😭😭😭. Allah Kamyab kare tumhe. Tumhari mushkilat khatam kare. Naseeb ache ho tumhare. Kush raho hamesha. Jaha b ho kush raho. Achi job mile tumhe agr kerni ha tumna to 😂😂😂😂. Nhi kerni to tumhare bande ki achi ho job 😂😂😂😂.Or pagal tumhare ilawa or kisi larki sa bat nhi hoti mari. Ye to tumhari dosto ko b pata ha😂😂 Ek to abi tak block ha 😂😂.
+                        Allah tumhari Rouh ghail ker dene walo ke saee sa mehfooz rakhe. Tum har qadam khair pao. 
+                        Chalo Happy BirthDay Sana 🎉💖✨. Stay blessed💖💖💖.
+</p>
+<div class="polaroid-caption">Wishing you all the best! 🎂</div>
+</div>
+</div>
+</div>
+
+        <!-- Card 5 -->
+        <div class="wish-card" id="card5">
+            <div class="tape tape-top-left"></div>
+            <div class="tape tape-top-right"></div>
+            <div class="sticker sticker-1">💝</div>
+            
+            <div class="card-content">
+                <div class="card-image-wrapper">
+                    <div class="multi-image-grid">
+                        <div class="grid-image" style="background-image: url('1.png');"></div>
+                        <div class="grid-image" style="background-image: url('2.png');"></div>
+                        <div class="grid-image" style="background-image: url('3.png');"></div>
+                        <div class="grid-image" style="background-image: url('4.png');"></div>
+                        <div class="grid-image" style="background-image: url('5.png');"></div>
+                    </div>
+                </div>
+                <div class="card-text">
+                    <div class="card-number">5</div>
+                    <div class="corner-deco corner-top-right">✿</div>
+                    <div class="corner-deco corner-bottom-left">♥</div>
+                    
+                    <div class="card-emoji">📸</div>
+                    <h2 class="card-title">Gille Shikwe</h2>
+                    <div class="heart-divider">♥</div>
+                    <p class="card-subtitle">
+    تم میری ہمیشہ پسندیدہ دوست رہو گی<br>
+    دنیا کا کوئی شخص تمہارا متبادل نہیں ہو سکتا
+</p>
+                    <div class="note-line"></div>
+
+                    <p class="card-message">
+                        Dekho mane boht note kiya ha tum shak kerne lag gai. Bato tak to theek ha lakin us din muntaha wali bat. Mane nhi tha socha k tum esa karo gi. Mane bhala tumsa jhoot ku bolna tha. Khair jo b ha sorry kerli thi tumna. Dil dosto sa nhi bharta unke rawaiyo sa bhar jata ha.
+                        Acha jo b tha ho gya masla khatam wo wase bata raha tha.
+                        Shuru shuru ma tum boht achi thi  abi b ho lakin phele jasi bat nhi.
+                        Now we are Good.
+                    </p>
+                    <div class="polaroid-caption">
+    بچپن کے کھیل ختم ہوتے ہی<br>
+    نصیبوں کے کھیل شروع ہو جاتے ہیں
+</div>
+            </div>
+        </div>
+</div>
+
+<!-- Image Lightbox -->
+<div class="image-lightbox" id="imageLightbox">
+    <div class="lightbox-content">
+        <span class="lightbox-close" id="closeLightbox">&times;</span>
+        <img class="lightbox-image" id="lightboxImg" src="" alt="Enlarged view">
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var cards = $('.wish-card');
+        var currentIndex = 0;
+        var totalCards = cards.length;
+        
+        // Audio elements
+        var audioBackground = document.getElementById('audioBackground');
+        var audioCard5 = document.getElementById('audioCard5');
+        var audioNext = document.getElementById('audioNext');
+        var audioPrev = document.getElementById('audioPrev');
+        
+        var backgroundMusicTime = 0; // Store the current time of background music
+        
+        // Auto-play background music when page loads
+        setTimeout(function() {
+            audioBackground.play().catch(function(e) {
+                console.log("Background music autoplay failed:", e);
+                // If autoplay fails, play on first user interaction
+                document.body.addEventListener('click', function playOnce() {
+                    audioBackground.play();
+                    document.body.removeEventListener('click', playOnce);
+                });
+            });
+        }, 500);
+        
+        // Function to pause background music and store time
+        function pauseBackgroundMusic() {
+            if (!audioBackground.paused) {
+                backgroundMusicTime = audioBackground.currentTime;
+                audioBackground.pause();
+            }
+        }
+        
+        // Function to resume background music from stored time
+        function resumeBackgroundMusic() {
+            audioBackground.currentTime = backgroundMusicTime;
+            audioBackground.play().catch(function(e) {
+                console.log("Resume background music failed:", e);
+            });
+        }
+
+        // Function to handle audio switching based on card
+        function switchAudioForCard(cardIndex) {
+            if (cardIndex === 4) { // Card 5 (index 4)
+                // Pause background music
+                audioBackground.pause();
+                audioCard5.currentTime = 0;
+                
+                // Play Card 5 special audio
+                audioCard5.play().catch(function(e) {
+                    console.log("Card 5 audio play failed:", e);
+                });
+            } else {
+                // Stop Card 5 audio if playing
+                if (!audioCard5.paused) {
+                    audioCard5.pause();
+                    audioCard5.currentTime = 0;
+                }
+                
+                // Resume background music if not playing
+                if (audioBackground.paused) {
+                    resumeBackgroundMusic();
+                }
+            }
+        }
+
+        // Next Button Logic
+        $('#nextBtn').click(function(){
+            cards.eq(currentIndex).removeClass('active');
+            currentIndex = (currentIndex + 1) % totalCards;
+            cards.eq(currentIndex).addClass('active turning');
+            
+            setTimeout(function() {
+                cards.eq(currentIndex).removeClass('turning');
+            }, 800);
+            
+            // Pause background music temporarily for sound effect
+            pauseBackgroundMusic();
+            if (!audioCard5.paused) {
+                audioCard5.pause();
+            }
+            
+            // Play next sound effect
+            if(audioNext) {
+                audioNext.currentTime = 0;
+                audioNext.play().catch(function(e) {
+                    console.log("Audio play failed:", e);
+                });
+                
+                // Switch to appropriate audio after sound effect ends
+                audioNext.onended = function() {
+                    switchAudioForCard(currentIndex);
+                };
+            } else {
+                switchAudioForCard(currentIndex);
+            }
+        });
+
+        // Previous Button Logic
+        $('#prevBtn').click(function(){
+            cards.eq(currentIndex).removeClass('active');
+            currentIndex = (currentIndex - 1 + totalCards) % totalCards;
+            cards.eq(currentIndex).addClass('active turning');
+            
+            setTimeout(function() {
+                cards.eq(currentIndex).removeClass('turning');
+            }, 800);
+            
+            // Pause background music temporarily for sound effect
+            pauseBackgroundMusic();
+            if (!audioCard5.paused) {
+                audioCard5.pause();
+            }
+            
+            // Play previous sound effect
+            if(audioPrev) {
+                audioPrev.currentTime = 0;
+                audioPrev.play().catch(function(e) {
+                    console.log("Audio play failed:", e);
+                });
+                
+                // Switch to appropriate audio after sound effect ends
+                audioPrev.onended = function() {
+                    switchAudioForCard(currentIndex);
+                };
+            } else {
+                switchAudioForCard(currentIndex);
+            }
+        });
+
+        // Keyboard navigation
+        $(document).keydown(function(e) {
+            if(e.keyCode == 37) {
+                $('#prevBtn').click();
+            } else if(e.keyCode == 39) {
+                $('#nextBtn').click();
+            }
+        });
+
+        // Prevent zoom on double tap for mobile
+        var lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            var now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Swipe functionality for mobile
+        var xDown = null;
+        var yDown = null;
+
+        function getTouches(evt) {
+            return evt.touches || evt.originalEvent.touches;
+        }                                                     
+
+        function handleTouchStart(evt) {
+            const firstTouch = getTouches(evt)[0];
+            xDown = firstTouch.clientX;
+            yDown = firstTouch.clientY;
+        };
+
+        function handleTouchMove(evt) {
+            if (!xDown || !yDown) {
+                return;
+            }
+
+            var xUp = evt.touches[0].clientX;
+            var yUp = evt.touches[0].clientY;
+
+            var xDiff = xDown - xUp;
+            var yDiff = yDown - yUp;
+
+            if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                if (xDiff > 0) {
+                    $('#nextBtn').click();
+                } else {
+                    $('#prevBtn').click();
+                }                       
+            }
+            xDown = null;
+            yDown = null;
+        };
+
+        document.addEventListener('touchstart', handleTouchStart, false);        
+        document.addEventListener('touchmove', handleTouchMove, false);
+
+        // Image Lightbox Functionality
+        var lightbox = document.getElementById('imageLightbox');
+        var lightboxImg = document.getElementById('lightboxImg');
+        var closeLightbox = document.getElementById('closeLightbox');
+
+        // Function to open lightbox
+        function openLightbox(imageSrc) {
+            lightboxImg.src = imageSrc;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        // Function to close lightbox
+        function closeLightboxFunc() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // Add click event to all card images
+        $('.card-image').click(function() {
+            var bgImage = $(this).css('background-image');
+            var imageUrl = bgImage.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+            openLightbox(imageUrl);
+        });
+
+        // Add click event to all grid images
+        $('.grid-image').click(function() {
+            var bgImage = $(this).css('background-image');
+            var imageUrl = bgImage.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+            openLightbox(imageUrl);
+        });
+
+        // Close lightbox when clicking the X button
+        closeLightbox.addEventListener('click', closeLightboxFunc);
+
+        // Close lightbox when clicking outside the image
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                closeLightboxFunc();
+            }
+        });
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                closeLightboxFunc();
+            }
+        });
+
+        // Pinch to zoom for mobile (optional enhancement)
+        var initialDistance = 0;
+        var currentScale = 1;
+
+        lightboxImg.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                initialDistance = Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX,
+                    e.touches[0].pageY - e.touches[1].pageY
+                );
+            }
+        });
+
+        lightboxImg.addEventListener('touchmove', function(e) {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                var currentDistance = Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX,
+                    e.touches[0].pageY - e.touches[1].pageY
+                );
+                currentScale = Math.min(Math.max(currentDistance / initialDistance, 0.5), 3);
+                lightboxImg.style.transform = 'scale(' + currentScale + ')';
+            }
+        });
+
+        lightboxImg.addEventListener('touchend', function(e) {
+            if (e.touches.length < 2) {
+                setTimeout(function() {
+                    lightboxImg.style.transform = 'scale(1)';
+                    currentScale = 1;
+                }, 300);
+            }
+        });
+    });
+</script>
+</body>
+</html>

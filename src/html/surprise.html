@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Special Moments</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="src/css/stylesheet.css">
+    <link href='https://fonts.googleapis.com/css?family=Signika' rel='stylesheet' type='text/css'>
+    
+    <style>
+        body {
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Signika', sans-serif;
+            color: #333;
+        }
+
+        /* Container to center the wish cards */
+        .card-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            max-width: 900px;
+            height: 500px;
+        }
+
+        /* Wish Card Styling - Replicating the "Card" feel */
+        .wish-card {
+            display: none; /* Hidden by default */
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border: 8px solid #fff;
+            border-bottom: 25px solid #fff; /* Polaroid style bottom */
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            overflow: hidden;
+            flex-direction: row;
+        }
+
+        .wish-card.active {
+            display: flex; /* Flexbox to create Left/Right layout */
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* Left Side: Image */
+        .card-left {
+            flex: 1; /* Takes 50% width */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-right: 4px solid #fff;
+        }
+
+        /* Right Side: Text */
+        .card-right {
+            flex: 1; /* Takes 50% width */
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card-right h2 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+
+        .card-right p {
+            font-size: 1.5em;
+            line-height: 1.6;
+        }
+
+        /* Specific Background Colors for Text Area */
+        #card1 .card-right { background-color: #FFDAB9; } /* Peach */
+        #card2 .card-right { background-color: #E0FFFF; } /* Light Cyan */
+        #card3 .card-right { background-color: #FFFACD; } /* Lemon Chiffon */
+        #card4 .card-right { background-color: #E6E6FA; } /* Lavender */
+
+        /* Navigation Buttons */
+        .nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #fff;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        #prevBtn { left: 30px; }
+        #nextBtn { right: 30px; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="audioNext" src="audio1.mp3"></audio>
+    <audio id="audioPrev" src="audio2.mp3"></audio>
+
+    <button id="prevBtn" class="nav-btn">&lt; PREVIOUS</button>
+    <button id="nextBtn" class="nav-btn">NEXT &gt;</button>
+
+    <div class="card-container">
+        
+        <div class="wish-card active" id="card1">
+            <div class="card-left" style="background-image: url('img1.png');"></div>
+            <div class="card-right">
+                <h2>Special Memory 1</h2>
+                <p>Remember this day? It was full of joy and laughter. Here's to making many more memories like this one!</p>
+            </div>
+        </div>
+
+        <div class="wish-card" id="card2">
+            <div class="card-left" style="background-image: url('img2.png');"></div>
+            <div class="card-right">
+                <h2>Another Adventure</h2>
+                <p>Every moment spent with you is a treasure. This picture captures perfectly how much fun we have together.</p>
+            </div>
+        </div>
+
+        <div class="wish-card" id="card3">
+            <div class="card-left" style="background-image: url('img3.png');"></div>
+            <div class="card-right">
+                <h2>Golden Times</h2>
+                <p>Looking back at this makes me smile. You bring so much light into the world. Happy moments indeed!</p>
+            </div>
+        </div>
+
+        <div class="wish-card" id="card4">
+            <div class="card-left" style="background-image: url('img4.png');"></div>
+            <div class="card-right">
+                <h2>A Wish for You</h2>
+                <p>May your life be as colorful and wonderful as these memories. Keep shining bright!</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            var cards = $('.wish-card');
+            var currentIndex = 0;
+            var totalCards = cards.length;
+            var audioNext = document.getElementById('audioNext');
+            var audioPrev = document.getElementById('audioPrev');
+
+            // Next Button Logic
+            $('#nextBtn').click(function(){
+                // Hide current card
+                cards.eq(currentIndex).removeClass('active');
+                
+                // Calculate next index
+                currentIndex = (currentIndex + 1) % totalCards;
+                
+                // Show next card
+                cards.eq(currentIndex).addClass('active');
+
+                // Play Audio
+                audioNext.currentTime = 0;
+                audioNext.play();
+            });
+
+            // Previous Button Logic
+            $('#prevBtn').click(function(){
+                // Hide current card
+                cards.eq(currentIndex).removeClass('active');
+                
+                // Calculate previous index (handles negative modulo)
+                currentIndex = (currentIndex - 1 + totalCards) % totalCards;
+                
+                // Show previous card
+                cards.eq(currentIndex).addClass('active');
+
+                // Play Audio
+                audioPrev.currentTime = 0;
+                audioPrev.play();
+            });
+        });
+    </script>
+</body>
+</html>
