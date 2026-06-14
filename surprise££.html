@@ -1016,17 +1016,22 @@
         
         var backgroundMusicTime = 0; // Store the current time of background music
         
-        // Auto-play background music when page loads
-        setTimeout(function() {
+        // Play s.mp3 instantly on the very first user interaction (click or touch)
+        // Browsers block autoplay until a gesture happens — this catches it as early as possible
+        var musicStarted = false;
+        function startMusicOnce() {
+            if (musicStarted) return;
+            musicStarted = true;
             audioBackground.play().catch(function(e) {
-                console.log("Background music autoplay failed:", e);
-                // If autoplay fails, play on first user interaction
-                document.body.addEventListener('click', function playOnce() {
-                    audioBackground.play();
-                    document.body.removeEventListener('click', playOnce);
-                });
+                console.log("Background music play failed:", e);
             });
-        }, 500);
+            document.removeEventListener('click', startMusicOnce);
+            document.removeEventListener('touchstart', startMusicOnce);
+            document.removeEventListener('keydown', startMusicOnce);
+        }
+        document.addEventListener('click', startMusicOnce);
+        document.addEventListener('touchstart', startMusicOnce);
+        document.addEventListener('keydown', startMusicOnce);
         
         // Function to pause background music and store time
         function pauseBackgroundMusic() {
